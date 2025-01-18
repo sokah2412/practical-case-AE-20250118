@@ -34,8 +34,9 @@ nb_passengers_by_routes.loc[pd.isna(
     nb_passengers_by_routes.nb_passengers), "nb_passengers"] = 0
 
 # Count covoit by driver. A covoit is defined as routes with minimum of {min_passengers} passengers
-nb_covoit_by_driver = nb_passengers_by_routes[nb_passengers_by_routes.nb_passengers >= min_passengers].groupby(
-    'driver_uid').count()[['_id_x']].reset_index()
+covoit_routes = nb_passengers_by_routes[nb_passengers_by_routes.nb_passengers >= min_passengers]
+nb_covoit_by_driver = covoit_routes.groupby('driver_uid').count()[
+    ['_id_x']].reset_index()
 
 
 # Format data to get number of drivers who made at least x covoits, for each x
@@ -59,6 +60,8 @@ st.line_chart(
     y="inverted_cumsum", y_label="nombre de conducteurs",
 )
 st.write(
-    f"Nombre de trajet correspondant aux filtres : {nb_covoits_frequency['nb_driver'].sum()}")
+    f"Nombre de trajets correspondant aux filtres : {covoit_routes.shape[0]}")
+st.write(
+    f"Nombre de conducteurs ayant fait x trajets correspondant aux filtres : {nb_covoits_frequency['nb_driver'].sum()}")
 st.write(
     f"=> Perte de {int(bonus_drop * 100)}% des conducteurs après l'obtention de la prime")
