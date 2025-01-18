@@ -18,7 +18,7 @@ with st.sidebar:
     journeys_status = st.multiselect(
         "Status du covoiturage", options=journeys_status_enum, default="VALIDATED")
     min_passengers = st.slider(
-        "Nombre minimal de passage par trajet", value=1, max_value=5)
+        "Nombre minimal de passagers par trajet", value=1, max_value=5)
 
 # Filtered datasets to apply transform only on the wanted data subsets
 filtered_journeys = journeys[journeys.status.isin(journeys_status)]
@@ -59,9 +59,7 @@ st.line_chart(
     x="nb_covoits_by_driver", x_label="nombre de trajets",
     y="inverted_cumsum", y_label="nombre de conducteurs",
 )
-st.write(
-    f"Nombre de trajets correspondant aux filtres : {covoit_routes.shape[0]}")
-st.write(
-    f"Nombre de conducteurs ayant fait x trajets correspondant aux filtres : {nb_covoits_frequency['nb_driver'].sum()}")
-st.write(
-    f"=> Perte de {int(bonus_drop * 100)}% des conducteurs après l'obtention de la prime")
+col1, col2, col3 = st.columns(3)
+col1.metric("Nb trajets", covoit_routes.shape[0])
+col2.metric("Nb conducteurs", nb_covoits_frequency['nb_driver'].sum())
+col3.metric("Drop après prime", f"{int(bonus_drop * 100)}%")
